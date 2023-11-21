@@ -53,6 +53,7 @@ String statusFanValue = "";
 String statusFanSettingValue = "";
 
 String statusSpray2 = "0"; 
+String statusSprayLast = "-1";   
 String statusSpray = "0";                     // 0 - off
                                               // 1 - 1 min
                                               // 2 - 3 min
@@ -68,13 +69,15 @@ String statusCalibratedAirMax = "1023";
 unsigned long lastTime = 0;                   // wifi / data
 unsigned long lastTimeAir = 0;
 unsigned long lastTimeFan = 0;
-unsigned long lastTimeSpray = 0;
+unsigned long lastTimeSpray = 0;            // 
+unsigned long lastTimeSprayDeb = 0;         // deb
 unsigned long lastTimeDisplay = 0;
 unsigned long lastTimeBtn = 0;    
 
 unsigned long timerDelay1 = 1000;
 unsigned long timerDelay2 = 500;
-unsigned long timerDelaySpray = 0;           //
+unsigned long timerDelaySpray = 0;           // countdown
+unsigned long timerDelaySprayOrig = 0;        // countdown max
 unsigned long timerDelayDisplay = 5000;      // manual / setting (fan/spray)
 
 
@@ -419,7 +422,8 @@ void loop()
   // Spray?
   {
     ConvertSpray();
-    if ((millis() - lastTimeSpray) > timerDelaySpray) 
+    /*
+    if ((millis() - lastTimeSprayDeb) > timerDelay1) 
     {
       // check status
       if (wifiStatus == 2)
@@ -437,6 +441,24 @@ void loop()
     else
     {
       digitalWrite(pinSpray, LOW);
+    }
+    */
+
+    if ((millis() - lastTimeSprayDeb) > timerDelay1) 
+    {
+      lastTimeSprayDeb = millis();
+
+      if (timerDelaySpray <= 0)
+      {
+        digitalWrite(pinSpray, HIGH);
+        delay(1000);
+        digitalWrite(pinSpray, LOW);
+        timerDelaySpray = timerDelaySprayOrig;
+      }
+      else
+      {
+        timerDelaySpray = timerDelaySpray - 1;
+      }
     }
   }
 
@@ -587,9 +609,18 @@ void ConvertFan()
 
 void ConvertSpray()
 {
+  // Check Set
+  if (statusSprayLast == statusSpray)
+  {
+    return;
+  }
+
+  // Set New
   if (statusSpray == "0")
   {
     timerDelaySpray = 0;
+    timerDelaySprayOrig = 0;
+    statusSprayLast = statusSpray;
     statusSprayValue = "OF";
     statusSpraySettingValue = "    TURN OFF    ";
   }
@@ -597,6 +628,8 @@ void ConvertSpray()
   if (statusSpray == "1")
   {
     timerDelaySpray = 60;
+    timerDelaySprayOrig = 60;
+    statusSprayLast = statusSpray;
     statusSprayValue = "01";
     statusSpraySettingValue = "    1 Minute    ";
   }
@@ -604,6 +637,8 @@ void ConvertSpray()
   if (statusSpray == "2")
   {
     timerDelaySpray = 180;
+    timerDelaySprayOrig = 180;
+    statusSprayLast = statusSpray;
     statusSprayValue = "03";
     statusSpraySettingValue = "    3 Minutes   ";
   }
@@ -611,6 +646,8 @@ void ConvertSpray()
   if (statusSpray == "3")
   {
     timerDelaySpray = 300;
+    timerDelaySprayOrig = 300;
+    statusSprayLast = statusSpray;
     statusSprayValue = "05";
     statusSpraySettingValue = "    5 Minutes   ";
   }
@@ -618,6 +655,8 @@ void ConvertSpray()
   if (statusSpray == "4")
   {
     timerDelaySpray = 600;
+    timerDelaySprayOrig = 600;
+    statusSprayLast = statusSpray;
     statusSprayValue = "10";
     statusSpraySettingValue = "   10 Minutes   ";
   }
@@ -625,6 +664,8 @@ void ConvertSpray()
   if (statusSpray == "5")
   {
     timerDelaySpray = 900;
+    timerDelaySprayOrig = 900;
+    statusSprayLast = statusSpray;
     statusSprayValue = "15";
     statusSpraySettingValue = "   15 Minutes   ";
   }
