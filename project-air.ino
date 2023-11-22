@@ -446,6 +446,12 @@ void loop()
 
     if ((millis() - lastTimeSprayDeb) > timerDelaySpray * 1000) 
     {
+      // check status
+      if (wifiStatus == 2)
+      {
+        return;
+      }
+      
       lastTimeSprayDeb = millis();
 
       digitalWrite(pinSpray, HIGH);
