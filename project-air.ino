@@ -444,7 +444,7 @@ void loop()
     }
     */
 
-    if ((millis() - lastTimeSprayDeb) > timerDelaySpray * 10) 
+    if ((millis() - lastTimeSprayDeb) > timerDelaySpray * 1000) 
     {
       lastTimeSprayDeb = millis();
 
