@@ -444,21 +444,13 @@ void loop()
     }
     */
 
-    if ((millis() - lastTimeSprayDeb) > timerDelay1) 
+    if ((millis() - lastTimeSprayDeb) > timerDelaySpray) 
     {
       lastTimeSprayDeb = millis();
 
-      if (timerDelaySpray <= 0)
-      {
-        digitalWrite(pinSpray, HIGH);
-        delay(1000);
-        digitalWrite(pinSpray, LOW);
-        timerDelaySpray = timerDelaySprayOrig;
-      }
-      else
-      {
-        timerDelaySpray = timerDelaySpray - 1;
-      }
+      digitalWrite(pinSpray, HIGH);
+      delay(1000);
+      digitalWrite(pinSpray, LOW);
     }
   }
 
