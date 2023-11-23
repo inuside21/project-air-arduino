@@ -451,6 +451,11 @@ void loop()
       {
         return;
       }
+
+      if (timerDelaySpray <= 0)
+      {
+        return;
+      }
       
       lastTimeSprayDeb = millis();
 
